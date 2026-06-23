@@ -679,5 +679,32 @@
 
   <!-- Scripts -->
   <script src="script.js"></script>
+
+  <!-- Visitor Notification -->
+  <script>
+  (function () {
+    const visitorId =
+      localStorage.getItem("dophera_vid") ||
+      crypto.randomUUID();
+
+    localStorage.setItem("dophera_vid", visitorId);
+
+    fetch("https://dophera-visitor-notify.social-dophera.workers.dev", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        visitorId,
+        page: location.pathname,
+        referrer: document.referrer || "Direct",
+        userAgent: navigator.userAgent,
+        language: navigator.language,
+        screen: `${screen.width}x${screen.height}`,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+      })
+    });
+  })();
+  </script>
 </body>
 </html>
