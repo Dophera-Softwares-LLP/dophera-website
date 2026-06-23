@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   initGSAP();
+  initTheme();
   initNavbar();
   initMobileMenu();
   initHeroSpotlight();
@@ -25,6 +26,47 @@ document.addEventListener('DOMContentLoaded', () => {
   initMagneticButtons();
   initSmoothScroll();
 });
+
+
+/* -------------------------------------------------------
+   Theme Toggle (Auto-detect + Manual Override)
+   ------------------------------------------------------- */
+function initTheme() {
+  const toggle = document.getElementById('themeToggle');
+  const root = document.documentElement;
+  const STORAGE_KEY = 'dophera-theme';
+
+  // Determine initial theme
+  const stored = localStorage.getItem(STORAGE_KEY);
+  if (stored) {
+    setTheme(stored);
+  } else {
+    // Auto-detect OS preference
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setTheme(prefersDark ? 'dark' : 'light');
+  }
+
+  // Listen for OS preference changes (only if no manual override)
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (!localStorage.getItem(STORAGE_KEY)) {
+      setTheme(e.matches ? 'dark' : 'light');
+    }
+  });
+
+  // Toggle button click
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      const current = root.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      setTheme(next);
+      localStorage.setItem(STORAGE_KEY, next);
+    });
+  }
+
+  function setTheme(theme) {
+    root.setAttribute('data-theme', theme);
+  }
+}
 
 
 /* -------------------------------------------------------
