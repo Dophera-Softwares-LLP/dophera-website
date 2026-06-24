@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://dophera.tech/sitemap.xml
